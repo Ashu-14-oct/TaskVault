@@ -1,9 +1,9 @@
 import mongoose, { Document, Types } from "mongoose";
 
 interface IUser extends Document {
-    name: String;
-    email: String;
-    password: String;
+    name: string;
+    email: string;
+    password: string;
     todo?: Types.ObjectId;
 }
 

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User from "../model/user.model";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
 
 // user sigm up
@@ -35,6 +36,29 @@ export const signUp = async (req: Request, res: Response) => {
         return res.status(201).json({message: "Signed up successfully!", newUser});
     } catch (error) {
         console.log('error in sign-up endpoint', error);
+        return res.status(500).json({message: "Internal server error"});
+    }
+}
+
+// log in
+export const logIn = async (req: Request, res: Response) => {
+    try {
+        const {email, password}: {email: string, password: string} = req.body;
+        const user = await User.findOne({email: email});
+        if(!user){
+            return res.status(401).json({message: "Email is incorrect"});
+        }
+
+        const checkPassword = await bcrypt.compare(password, user.password);
+        if(!checkPassword){
+            return res.status(401).json({message: "Wrong password"});
+        }
+
+        const token = await jwt.sign({_id: user.id}, 'jwtkeyexample', {expiresIn: '1h'});
+
+        return res.status(200).json({message:"Logged in successfully", token});
+    } catch (error) {
+        console.log('error in log-in endpoint', error);
         return res.status(500).json({message: "Internal server error"});
     }
 }

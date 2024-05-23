@@ -12,9 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signUp = void 0;
+exports.logIn = exports.signUp = void 0;
 const user_model_1 = __importDefault(require("../model/user.model"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const express_validator_1 = require("express-validator");
 // user sigm up
 const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -49,3 +50,24 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.signUp = signUp;
+// log in
+const logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email, password } = req.body;
+        const user = yield user_model_1.default.findOne({ email: email });
+        if (!user) {
+            return res.status(401).json({ message: "Email is incorrect" });
+        }
+        const checkPassword = yield bcrypt_1.default.compare(password, user.password);
+        if (!checkPassword) {
+            return res.status(401).json({ message: "Wrong password" });
+        }
+        const token = yield jsonwebtoken_1.default.sign({ _id: user.id }, 'jwtkeyexample', { expiresIn: '1h' });
+        return res.status(200).json({ message: "Logged in successfully", token });
+    }
+    catch (error) {
+        console.log('error in log-in endpoint', error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+});
+exports.logIn = logIn;

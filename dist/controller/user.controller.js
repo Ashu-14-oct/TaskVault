@@ -62,10 +62,12 @@ const logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (!user) {
             return res.status(401).json({ message: "Email is incorrect" });
         }
+        // comparing hashed password with original password using bcrypt
         const checkPassword = yield bcrypt_1.default.compare(password, user.password);
         if (!checkPassword) {
             return res.status(401).json({ message: "Wrong password" });
         }
+        // creating jwt token for logged in user
         const token = yield jsonwebtoken_1.default.sign({ _id: user.id }, 'jwtkeyexample', { expiresIn: '1h' });
         return res.status(200).json({ message: "Logged in successfully", token });
     }

@@ -53,11 +53,13 @@ export const logIn = async (req: Request, res: Response) => {
             return res.status(401).json({message: "Email is incorrect"});
         }
 
+        // comparing hashed password with original password using bcrypt
         const checkPassword = await bcrypt.compare(password, user.password);
         if(!checkPassword){
             return res.status(401).json({message: "Wrong password"});
         }
 
+        // creating jwt token for logged in user
         const token = await jwt.sign({_id: user.id}, 'jwtkeyexample', {expiresIn: '1h'});
 
         return res.status(200).json({message:"Logged in successfully", token});

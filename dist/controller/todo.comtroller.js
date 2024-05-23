@@ -12,10 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createTodo = void 0;
+exports.updateTodo = exports.createTodo = void 0;
 const todo_model_1 = __importDefault(require("../model/todo.model"));
 const user_model_1 = __importDefault(require("../model/user.model"));
+const mongoose_1 = require("mongoose");
 const express_validator_1 = require("express-validator");
+// create todo
 const createTodo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     try {
@@ -45,3 +47,22 @@ const createTodo = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.createTodo = createTodo;
+// update todo
+const updateTodo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _c, _d;
+    try {
+        const { id } = req.params;
+        const user_id = (_c = req.user) === null || _c === void 0 ? void 0 : _c._id;
+        const user = yield user_model_1.default.findOne({ _id: user_id });
+        if (user && ((_d = user === null || user === void 0 ? void 0 : user.todo) === null || _d === void 0 ? void 0 : _d.includes(new mongoose_1.Types.ObjectId(id)))) {
+            const updatedTodo = yield todo_model_1.default.findByIdAndUpdate(id, { completed: true }, { new: true });
+            return res.status(200).json({ message: "Todo updated successfully", updatedTodo });
+        }
+        return res.status(401).json({ message: "You don't have permission to delete this." });
+    }
+    catch (error) {
+        console.log("error in update-todo endpoint", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+});
+exports.updateTodo = updateTodo;

@@ -3,7 +3,9 @@ import Todo, { ITodo } from "../model/todo.model";
 import User, { IUser } from "../model/user.model";
 import { Types } from "mongoose";
 import { validationResult } from "express-validator";
+import { todo } from "node:test";
 
+// create todo
 export const createTodo = async (req: Request, res: Response) => {
   try {
     const errors = validationResult(req);
@@ -33,3 +35,22 @@ export const createTodo = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// update todo
+export const updateTodo = async (req: Request, res: Response) => {
+    try {
+        const {id} = req.params;
+
+        const user_id = req.user?._id;
+        const user = await User.findOne({ _id: user_id });
+
+        if(user && user?.todo?.includes(new Types.ObjectId(id))){
+            const updatedTodo = await Todo.findByIdAndUpdate(id, { completed: true }, { new: true });
+            return res.status(200).json({message: "Todo updated successfully", updatedTodo});
+        }
+        return res.status(401).json({message: "You don't have permission to delete this."});
+    } catch (error) {
+        console.log("error in update-todo endpoint", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}

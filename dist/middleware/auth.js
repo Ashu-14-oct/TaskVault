@@ -22,6 +22,7 @@ const check = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
             return res.status(409).json({ message: "Missing token" });
         }
         const auth = token.replace("Bearer ", "");
+        // checking token
         let decoded;
         try {
             decoded = jsonwebtoken_1.default.verify(auth, 'jwtkeyexample');

@@ -53,6 +53,10 @@ exports.signUp = signUp;
 // log in
 const logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
         const { email, password } = req.body;
         const user = yield user_model_1.default.findOne({ email: email });
         if (!user) {

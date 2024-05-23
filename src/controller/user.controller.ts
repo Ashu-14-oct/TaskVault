@@ -43,6 +43,10 @@ export const signUp = async (req: Request, res: Response) => {
 // log in
 export const logIn = async (req: Request, res: Response) => {
     try {
+        const errors = validationResult(req);
+        if(!errors.isEmpty()){
+            return res.status(400).json({errors: errors.array()});
+        }
         const {email, password}: {email: string, password: string} = req.body;
         const user = await User.findOne({email: email});
         if(!user){

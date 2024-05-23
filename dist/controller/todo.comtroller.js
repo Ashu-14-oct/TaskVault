@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateTodo = exports.createTodo = void 0;
+exports.deleteTodo = exports.updateTodo = exports.createTodo = void 0;
 const todo_model_1 = __importDefault(require("../model/todo.model"));
 const user_model_1 = __importDefault(require("../model/user.model"));
 const mongoose_1 = require("mongoose");
@@ -66,3 +66,25 @@ const updateTodo = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.updateTodo = updateTodo;
+// delete todo
+const deleteTodo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _e, _f;
+    try {
+        const { id } = req.params;
+        const user_id = (_e = req.user) === null || _e === void 0 ? void 0 : _e._id;
+        const user = yield user_model_1.default.findOne({ _id: user_id });
+        if (user && ((_f = user === null || user === void 0 ? void 0 : user.todo) === null || _f === void 0 ? void 0 : _f.includes(new mongoose_1.Types.ObjectId(id)))) {
+            // removing id from user todo list
+            user.todo = user.todo.filter(todoId => todoId.toString() !== id);
+            yield user.save();
+            const deletedTodo = yield todo_model_1.default.findByIdAndDelete(id);
+            return res.status(200).json({ message: "Todo deleted successfully", deletedTodo });
+        }
+        return res.status(401).json({ message: "You don't have permission to delete this." });
+    }
+    catch (error) {
+        console.log("error in delete-todo endpoint", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+});
+exports.deleteTodo = deleteTodo;

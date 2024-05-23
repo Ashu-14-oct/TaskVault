@@ -54,3 +54,26 @@ export const updateTodo = async (req: Request, res: Response) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 }
+
+// delete todo
+export const deleteTodo = async (req: Request, res: Response) => {
+    try {
+        const {id} = req.params;
+
+        const user_id = req.user?._id;
+        const user = await User.findOne({ _id: user_id });
+
+        if(user && user?.todo?.includes(new Types.ObjectId(id))){
+            // removing id from user todo list
+            user.todo = user.todo.filter(todoId => todoId.toString() !== id);
+            await user.save();
+
+            const deletedTodo = await Todo.findByIdAndDelete(id);
+            return res.status(200).json({message: "Todo deleted successfully", deletedTodo});
+        }
+        return res.status(401).json({message: "You don't have permission to delete this."});
+    } catch (error) {
+        console.log("error in delete-todo endpoint", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}

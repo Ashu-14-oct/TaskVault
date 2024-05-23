@@ -12,4 +12,5 @@ router.post('/user/log-in', validator_1.logInValidation, user_controller_1.logIn
 // todo related routes
 router.post('/todo/create', auth_1.check, validator_1.todoValidator, todo_comtroller_1.createTodo);
 router.put('/todo/mark-done/:id', auth_1.check, todo_comtroller_1.updateTodo);
+router.delete('/todo/delete/:id', auth_1.check, todo_comtroller_1.deleteTodo);
 exports.default = router;

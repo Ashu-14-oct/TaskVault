@@ -17,10 +17,10 @@ const userSchema = new mongoose_1.default.Schema({
         type: String,
         required: true
     },
-    todo: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "Todo"
-    }
+    todo: [{
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: "Todo"
+        }]
 }, {
     timestamps: true
 });

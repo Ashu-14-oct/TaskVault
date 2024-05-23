@@ -22,7 +22,13 @@ const check = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
             return res.status(409).json({ message: "Missing token" });
         }
         const auth = token.replace("Bearer ", "");
-        const decoded = yield jsonwebtoken_1.default.verify(auth, 'jwtkeyexample');
+        let decoded;
+        try {
+            decoded = jsonwebtoken_1.default.verify(auth, 'jwtkeyexample');
+        }
+        catch (err) {
+            return res.status(401).json({ message: "Invalid token" });
+        }
         const user = yield user_model_1.default.findOne({ _id: decoded._id });
         if (!user) {
             return res.status(404).json({ message: "User not found" });

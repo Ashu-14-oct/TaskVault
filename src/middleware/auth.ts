@@ -17,12 +17,20 @@ interface JwtPayloadWithId extends jwt.JwtPayload {
 
 export const check = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        
         const token = req.headers.authorization;
         if(!token){
             return res.status(409).json({message: "Missing token"});
         }
         const auth = token.replace("Bearer ", "");
-        const decoded = await jwt.verify(auth, 'jwtkeyexample') as JwtPayloadWithId;
+
+        // checking token
+        let decoded;
+        try {
+            decoded = jwt.verify(auth, 'jwtkeyexample') as JwtPayloadWithId;
+        } catch (err) {
+            return res.status(401).json({ message: "Invalid token" });
+        }
 
         const user: IUser | null = await User.findOne({_id: decoded._id});
         if (!user) {

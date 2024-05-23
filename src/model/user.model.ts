@@ -4,7 +4,7 @@ export interface IUser extends Document {
     name: string;
     email: string;
     password: string;
-    todo?: Types.ObjectId;
+    todo?: Types.ObjectId[];
 }
 
 const userSchema = new mongoose.Schema({
@@ -20,10 +20,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    todo: {
+    todo: [{
         type: mongoose.Schema.Types.ObjectId,
         ref:  "Todo"
-    }
+    }]
 }, {
     timestamps: true
 });

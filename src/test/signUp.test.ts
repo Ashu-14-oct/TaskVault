@@ -3,7 +3,7 @@ import express from 'express';
 import User from '../model/user.model';
 import { signUp } from '../controller/user.controller';
 import bcrypt from 'bcrypt';
-import { body, validationResult } from 'express-validator';
+import { body } from 'express-validator';
 
 // mock the user
 jest.mock('../model/user.model');

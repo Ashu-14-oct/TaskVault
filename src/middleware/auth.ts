@@ -19,6 +19,8 @@ export const check = async (req: Request, res: Response, next: NextFunction) => 
     try {
         
         const token = req.headers.authorization;
+        console.log(token);
+        
         if(!token){
             return res.status(409).json({message: "Missing token"});
         }

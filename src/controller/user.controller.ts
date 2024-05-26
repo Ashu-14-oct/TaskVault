@@ -17,7 +17,7 @@ export const signUp = async (req: Request, res: Response) => {
         // check if user already present in our db
         const checkUser = await User.findOne({email: email});
         if(checkUser){
-            return res.status(409).json({message: "User with this mail already exist, try differnt mail."});
+            return res.status(409).json({message: "User with this mail already exist, try different mail."});
         }
 
         // hashing password before creating account

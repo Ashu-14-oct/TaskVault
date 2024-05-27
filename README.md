@@ -34,3 +34,14 @@ Before you begin, ensure you have met the following requirements:
     ```sh
     npm install
     ```
+
+4. start the Application
+   ```sh
+   cd src
+   npx ts-node index.ts
+   ```
+5. Or run the test cases
+   ```sh
+   npm test
+   ```
+   

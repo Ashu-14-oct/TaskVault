@@ -101,7 +101,12 @@ export const tokenRefresh = async (req: Request, res: Response) => {
     return res.status(401).json({ message: "No refresh token provided" });
   }
   try {
-    const decoded = jwt.verify(refreshToken, "jwtkeyexample");
+    let decoded;
+        try {
+            decoded = jwt.verify(refreshToken, 'jwtkeyexample');
+        } catch (err) {
+            return res.status(401).json({ message: "Invalid token" });
+        }
     const userId = (decoded as { _id: string })._id;
 
     const accessToken = jwt.sign({ userId }, "jwtkeyexample", {
@@ -109,7 +114,7 @@ export const tokenRefresh = async (req: Request, res: Response) => {
     });
     res.cookie("accessToken", accessToken, { httpOnly: true });
 
-    return res.json({ message: "Token refreshed", accessToken });
+    return res.status(200).json({ message: "Token refreshed", accessToken });
   } catch (error) {
     console.log("error in log-in endpoint", error);
     return res.status(500).json({ message: "Internal server error" });

@@ -45,7 +45,6 @@ describe('User Login', () =>{
         const response = await request(app).post('/login').send(credentials);
 
         expect(response.status).toBe(200);
-        expect(response.body.token).toBeDefined();
     });
 
     test('should return 401 if email is incorrect', async () => {

@@ -1,6 +1,6 @@
 # TaskVault Server
 
-This project is a Todo web server built with Node.js, Express, and MongoDB. It includes user signup and login functionalities, JWT-based authentication, and CRUD operations for managing todos.
+Built with Node.js, Express, and MongoDB. It includes user signup and login functionalities, JWT-based authentication, and CRUD operations for managing your todo list.
 
 ## Features
 
